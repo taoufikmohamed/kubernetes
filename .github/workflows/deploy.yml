@@ -1,0 +1,45 @@
+name: Deploy to Kubernetes
+
+on:
+  push:
+    branches:
+      - main  # Trigger on pushes to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger on pull requests to the main branch
+
+jobs:
+  deploy:
+    name: Deploy to Kubernetes
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Set up kubectl
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
+
+    # Authenticate with Kubernetes cluster
+    - name: Set up Kubeconfig
+      env:
+        KUBECONFIG: ${{ secrets.KUBECONFIG }}
+      run: |
+        echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
+        export KUBECONFIG=kubeconfig.yaml
+
+    # Validate Kubernetes manifests
+    - name: Validate Kubernetes Manifests
+      run: kubectl apply --dry-run=client -f kub-nginx.yaml
+
+    # Deploy to Kubernetes
+    - name: Apply Kubernetes Manifests
+      run: kubectl apply -f kub-nginx.yaml
+
+    # Verify Deployment
+    - name: Verify Deployment
+      run: kubectl rollout status deployment/my-app-deployment -n my-app-namespace
