@@ -3,6 +3,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: my-app-namespace
+  annotations:
+    description: "Namespace for my application"
 ---
 # Create a ConfigMap to store non-sensitive configuration data
 apiVersion: v1
@@ -29,6 +31,8 @@ kind: Deployment
 metadata:
   name: my-app-deployment
   namespace: my-app-namespace
+  annotations:
+    description: "Deployment for my application"
 spec:
   replicas: 3  # Number of pod replicas
   selector:
@@ -44,6 +48,25 @@ spec:
         image: nginx:latest  # Docker image to use
         ports:
         - containerPort: 80  # Port exposed by the container
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20
         env:
         - name: CONFIG_KEY
           valueFrom:
@@ -62,6 +85,8 @@ kind: Service
 metadata:
   name: my-app-service
   namespace: my-app-namespace
+  annotations:
+    description: "Service to expose my application"
 spec:
   selector:
     app: my-app  # Label selector to identify pods
@@ -70,3 +95,4 @@ spec:
     port: 80  # Port exposed by the service
     targetPort: 80  # Port on the container
   type: LoadBalancer  # Type of service to expose externally
+  healthCheckNodePort: 32000  # Optional health check for the service
