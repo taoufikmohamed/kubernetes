@@ -1,0 +1,72 @@
+# Define a namespace for the application
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: my-app-namespace
+---
+# Create a ConfigMap to store non-sensitive configuration data
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-app-config
+  namespace: my-app-namespace
+data:
+  config-key: config-value  # Key-value pair for configuration
+---
+# Create a Secret to store sensitive data like passwords or API keys
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-app-secret
+  namespace: my-app-namespace
+type: Opaque
+data:
+  secret-key: c2VjcmV0LXZhbHVl  # Base64 encoded value for the secret
+---
+# Define a Deployment to manage the application pods
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-deployment
+  namespace: my-app-namespace
+spec:
+  replicas: 3  # Number of pod replicas
+  selector:
+    matchLabels:
+      app: my-app  # Label selector to identify pods
+  template:
+    metadata:
+      labels:
+        app: my-app  # Label for the pods
+    spec:
+      containers:
+      - name: nginx-container  # Name of the container
+        image: nginx:latest  # Docker image to use
+        ports:
+        - containerPort: 80  # Port exposed by the container
+        env:
+        - name: CONFIG_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: my-app-config  # Reference to ConfigMap
+              key: config-key  # Key in the ConfigMap
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: my-app-secret  # Reference to Secret
+              key: secret-key  # Key in the Secret
+---
+# Define a Service to expose the application
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-service
+  namespace: my-app-namespace
+spec:
+  selector:
+    app: my-app  # Label selector to identify pods
+  ports:
+  - protocol: TCP
+    port: 80  # Port exposed by the service
+    targetPort: 80  # Port on the container
+  type: LoadBalancer  # Type of service to expose externally
