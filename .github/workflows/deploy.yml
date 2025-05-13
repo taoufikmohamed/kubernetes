@@ -1,8 +1,9 @@
 name: Deploy to Kubernetes
 
 on:
+  workflow_dispatch:
   push:
-    branches:
+   branches:
       - main  # Trigger on pushes to the main branch
   pull_request:
     branches:
