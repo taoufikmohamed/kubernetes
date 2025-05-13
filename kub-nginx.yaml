@@ -23,7 +23,7 @@ metadata:
   namespace: my-app-namespace
 type: Opaque
 data:
-  secret-key: c2VjcmV0LXZhbHVl  # Example of Base64 encoded value for the secret
+  secret-key: $ {{ secrets.KUBECONFIG }}  # Example of Base64 encoded value for the secret
 ---
 # Define a Deployment to manage the application pods
 apiVersion: apps/v1
@@ -49,7 +49,7 @@ spec:
     spec:
       containers:
       - name: nginx-container  # Name of the container
-        image: image: nginx:1.23  # Docker image to use
+        image: nginx:1.23  # Docker image to use
         ports:
         - containerPort: 80  # Port exposed by the container
         resources:
