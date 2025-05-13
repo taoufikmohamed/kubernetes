@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multi-container-pod
+spec:
+  containers:
+  - name: web-container
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+    env:
+    - name: ENVIRONMENT
+      value: "production"
+  - name: db-container
+    image: postgres:latest
+    ports:
+    - containerPort: 5432
+    env:
+    - name: POSTGRES_DB
+      value: "mydatabase"
+    - name: POSTGRES_USER
+      value: "myuser"
+    - name: POSTGRES_PASSWORD
+      value: "mypassword"
+  - name: cache-container
+    image: redis:latest
+    ports:
+    - containerPort: 6379
+    env:
+    - name: REDIS_PASSWORD
+      value: "redispassword"
