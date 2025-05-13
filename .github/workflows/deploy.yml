@@ -25,9 +25,13 @@ jobs:
         version: 'latest'
 
     # Authenticate with Kubernetes cluster
+    # *******base64-encoded content of your Kubernetes configuration file (kubeconfig)************  
+    # Locate(~/.kube/config) then encode t using: ->  "base64 ~/.kube/config > kubeconfig.base64"
+    # cat kubeconfig.base64
+    # ********************************************************************************************
     - name: Set up Kubeconfig
       env:
-        KUBECONFIG: ${{ secrets.KUBECONFIG }}
+        KUBECONFIG: ${{ secrets.KUBECONFIG }} 
       run: |
         echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
         export KUBECONFIG=kubeconfig.yaml
