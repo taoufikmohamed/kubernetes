@@ -35,6 +35,10 @@ metadata:
     description: "Deployment for my application"
 spec:
   replicas: 3  # Number of pod replicas
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
       app: my-app  # Label selector to identify pods
@@ -45,7 +49,7 @@ spec:
     spec:
       containers:
       - name: nginx-container  # Name of the container
-        image: nginx:latest  # Docker image to use
+        image: image: nginx:1.23  # Docker image to use
         ports:
         - containerPort: 80  # Port exposed by the container
         resources:
@@ -59,13 +63,13 @@ spec:
           httpGet:
             path: /
             port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 10
+          initialDelaySeconds: 3
+          periodSeconds: 5
         livenessProbe:
           httpGet:
             path: /
             port: 80
-          initialDelaySeconds: 15
+          initialDelaySeconds: 10
           periodSeconds: 20
         env:
         - name: CONFIG_KEY
@@ -94,5 +98,5 @@ spec:
   - protocol: TCP
     port: 80  # Port exposed by the service
     targetPort: 80  # Port on the container
-  type: LoadBalancer  # Type of service to expose externally
+  type: LoadBalancer  # Type of service to expose externally (type: ClusterIP for internal services instead)
   healthCheckNodePort: 32000  # Optional health check for the service
