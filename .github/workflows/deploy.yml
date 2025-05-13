@@ -41,6 +41,12 @@ jobs:
     #- name: Validate Kubernetes Manifests
      # run: kubectl apply --dry-run=client -f kub-nginx.yaml --validate=false
 
+    - name: Set up Kubernetes
+      run: |
+        mkdir -p $HOME/.kube
+        echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+
+
     # Deploy to Kubernetes
     - name: Apply Kubernetes Manifests
       run: kubectl apply -f kub-nginx.yaml 
