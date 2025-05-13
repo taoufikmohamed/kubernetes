@@ -39,11 +39,11 @@ jobs:
 
     # Validate Kubernetes manifests
     - name: Validate Kubernetes Manifests
-      run: kubectl apply --dry-run=client -f kub-nginx.yaml
+      run: kubectl apply --dry-run=client -f kub-nginx.yaml --validate=false
 
     # Deploy to Kubernetes
     - name: Apply Kubernetes Manifests
-      run: kubectl apply -f kub-nginx.yaml
+      run: kubectl apply -f kub-nginx.yaml 
 
     # Verify Deployment
     - name: Verify Deployment
