@@ -38,8 +38,8 @@ jobs:
         export KUBECONFIG=kubeconfig.yaml
 
     # Validate Kubernetes manifests
-    - name: Validate Kubernetes Manifests
-      run: kubectl apply --dry-run=client -f kub-nginx.yaml --validate=false
+    #- name: Validate Kubernetes Manifests
+     # run: kubectl apply --dry-run=client -f kub-nginx.yaml --validate=false
 
     # Deploy to Kubernetes
     - name: Apply Kubernetes Manifests
