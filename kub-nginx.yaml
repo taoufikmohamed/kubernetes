@@ -23,7 +23,7 @@ metadata:
   namespace: my-app-namespace
 type: Opaque
 data:
-  secret-key: $ {{ secrets.KUBECONFIG }}  # Example of Base64 encoded value for the secret
+  secret-key: S3ViZXJuZXRlczI1  # Example of Base64 encoded value for the secret
 ---
 # Define a Deployment to manage the application pods
 apiVersion: apps/v1
